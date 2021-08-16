@@ -13,9 +13,9 @@ class DashboardController extends Controller
     public function dashboard()
     {
         $teacherProfile = TeacherProfile::where('user_id', Auth::user()->id)->first();
-        dd(Auth::user()->expertiseInSubjects()->pluck('subject_id'));
+        $teacherSubjects = Auth::user()->expertiseInSubjects()->pluck('subject_id');
         $subjects = Subject::all();
-        return view('teacher.dashboard', ['subjects' => $subjects, 'teacherProfile' => $teacherProfile]);
+        return view('teacher.dashboard', ['teacherSubjects' => $teacherSubjects, 'subjects' => $subjects, 'teacherProfile' => $teacherProfile]);
     }
     public function updateTeacherProfile(UpdateTeacherProfileRequest $request)
     {

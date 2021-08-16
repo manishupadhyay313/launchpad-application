@@ -22,6 +22,13 @@ class User extends Authenticatable
         'role_id',
         'status',
         'password',
+        'address',
+        'profile_picture',
+        'current_school',
+        'previous_school',
+        'experience',
+        'parent_details',
+        'assigned_teacher',
     ];
 
     /**
@@ -41,14 +48,6 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'parent_details' => 'array',
     ];
-
-    public function expertiseInSubjects()
-    {
-        return $this->belongsToMany(Subject::class);
-    }
-    public function teacherProfile()
-    {
-        return $this->hasOne(TeacherProfile::class);
-    }
 }
