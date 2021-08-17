@@ -114,9 +114,9 @@ class RegisterController extends Controller
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
             $extension = $request->file('profile_picture')->getClientOriginalExtension();
             $fileNameToStore = $filename . '_' . time() . '.' . $extension;
-            $path = $request->file('profile_picture')->storeAs('public/image', $fileNameToStore);
+            $request->file('profile_picture')->storeAs('public/image', $fileNameToStore);
         }
-        $user->profile_picture = $path;
+        $user->profile_picture = $fileNameToStore;
         $user->experience = $request->experience;
         $parentDetails = [];
         if ($request->parent_details[0]['name'] != '') {

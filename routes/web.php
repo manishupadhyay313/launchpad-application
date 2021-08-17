@@ -28,6 +28,10 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'adminAuth']], function () {
     Route::get('dashboard', [AdminDashboardController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('student/edit/{userId}', [AdminDashboardController::class, 'editStudent'])->name('admin.edit-student');
+    Route::get('teacher/edit/{userId}', [AdminDashboardController::class, 'editTeacher'])->name('admin.edit-teacher');
+    route::patch('student/update/{userId}', [AdminDashboardController::class, 'updateStaudent'])->name('admin.update-student');
+    route::patch('teacher/update/{userId}', [AdminDashboardController::class, 'updateTeacher'])->name('admin.update-teacher');
 });
 
 Route::group(['prefix' => 'teacher', 'middleware' => ['auth', 'teacherAuth']], function () {
