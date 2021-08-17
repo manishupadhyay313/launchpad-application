@@ -13,7 +13,7 @@
                     @endif 
                     <form method="POST" action="{{ route('update.teacher.profile') }}" enctype="multipart/form-data">
                         @csrf
-                        @if ($teacherProfile)
+                        @if ($teacherProfile->id)
                             <input name="id" type="hidden" value="{{ $teacherProfile->id }}">
                         @endif
                         <div class="form-group row">

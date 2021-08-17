@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Providers\RouteServiceProvider;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -59,6 +60,12 @@ class LoginController extends Controller
             'password' => "required"
         ]);
         if (Auth::attempt(['email' => $input['email'], 'password' => $input['password']])) {
+            $userStatus = Auth::User()->status;
+            if ($userStatus == 'inactive') {
+                Auth::logout();
+                Session::flush();
+                return redirect(url('login'))->withInput()->with('error', 'You are not active. please contact to admin');
+            }
             if (auth()->user()->role_id == 1) {
                 return redirect()->route('admin.dashboard');
             } elseif (auth()->user()->role_id == 2) {
