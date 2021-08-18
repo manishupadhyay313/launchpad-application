@@ -7,28 +7,44 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Session;
 
-class ApiController extends Controller
+class StudentApiController extends Controller
 {
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'email' => 'required|email|Unique:users',
+            'role_id' => 'required',
+            'email' => 'required|email|unique:users',
             'password' => 'required',
             'c_password' => 'required|same:password',
+            'address' => 'required',
+            'current_school' => 'required',
+            'previous_school' => 'required',
+            'parent_details' => 'required',
+            'assigned_teacher' => 'required',
+            'profile_picture' => 'required|image|mimes:jpg,png,jpeg,gif,svg',
+
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 202);
         }
         $input = $request->all();
+        if ($request->hasFile('profile_picture')) {
+            $filenameWithExt = $request->file('profile_picture')->getClientOriginalName();
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            $extension = $request->file('profile_picture')->getClientOriginalExtension();
+            $fileNameToStore = $filename . '_' . time() . '.' . $extension;
+            $destinationPath = public_path('/images');
+            $request->file('profile_picture')->move($destinationPath, $fileNameToStore);
+        }
+        $input['profile_picture'] = $fileNameToStore;
         $input['password'] = bcrypt($input['password']);
-        $input['role_id'] = 1;
-        $input['status'] = 'active';
         $user = User::create($input);
         $responseArr = [];
-        $responseArr['msg'] = 'Successfully register';
-        $responseArr['admin'] = $user;
+        $responseArr['msg'] = "You are successfully register and wait for admin approval";
+        $responseArr['student'] = $user;
         return response()->json($responseArr, 200);
     }
 
@@ -44,10 +60,14 @@ class ApiController extends Controller
         }
 
         $credentials = request(['email', 'password']);
+        
         if(!Auth::attempt($credentials)){
             return response()->json(['message' => 'Unauthorized'], 401);
         }
-       
+        $userStatus = Auth::User()->status;
+        if ($userStatus == 'inactive') {
+            return response()->json(['error' => 'You are not active. please contact to admin'], 203);
+        }
         $user = $request->user();
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->token;
@@ -70,5 +90,7 @@ class ApiController extends Controller
         ]);
     }
 
-    
+    public function updateStudent(Request $request){
+        dd($request->all());
+    }
 }

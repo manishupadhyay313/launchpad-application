@@ -95,7 +95,7 @@ class RegisterController extends Controller
             'password' => 'min:6|required_with:password_confirmation|same:password_confirmation',
             'password_confirmation' => 'min:6',
             'role_id' => 'required',
-            'profile_picture' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:20',
+            'profile_picture' => 'required|image|mimes:jpg,png,jpeg,gif,svg',
             'current_school' => 'required',
             'previous_school' => 'required',
             'address' => 'required',
