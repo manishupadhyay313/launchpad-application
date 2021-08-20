@@ -27,6 +27,8 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'adminAuth']], function () {
+    Route::get('profile', [AdminDashboardController::class, 'editProfile'])->name('admin.profile');
+    Route::post('profile', [AdminDashboardController::class, 'updateProfile'])->name('admin.update-profile');
     Route::get('dashboard', [AdminDashboardController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('student/edit/{userId}', [AdminDashboardController::class, 'editStudent'])->name('admin.edit-student');
     Route::get('teacher/edit/{userId}', [AdminDashboardController::class, 'editTeacher'])->name('admin.edit-teacher');
@@ -35,10 +37,14 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'adminAuth']], funct
 });
 
 Route::group(['prefix' => 'teacher', 'middleware' => ['auth', 'teacherAuth']], function () {
+    Route::get('profile', [TeacherDashboardController::class, 'editProfile'])->name('teacher.profile');
+    Route::post('profile', [TeacherDashboardController::class, 'updateProfile'])->name('teacher.update-profile');
     Route::get('dashboard', [TeacherDashboardController::class, 'dashboard'])->name('teacher.dashboard');
     Route::post('dashboard', [TeacherDashboardController::class, 'updateTeacherProfile'])->name('update.teacher.profile');
 });
 
 Route::group(['prefix' => 'student', 'middleware' => ['auth', 'studentAuth']], function () {
+    Route::get('profile', [StudentDashboardController::class, 'editProfile'])->name('student.profile');
+    Route::post('profile', [StudentDashboardController::class, 'updateProfile'])->name('student.update-profile');
     Route::get('dashboard', [StudentDashboardController::class, 'dashboard'])->name('student.dashboard');
 });

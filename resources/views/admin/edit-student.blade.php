@@ -55,7 +55,7 @@
                         <div class="form-group row">
                             <label for="profile_picture" class="col-md-4 col-form-label text-md-right">{{ __('Profile Picture') }}</label>
                             <div class="col-md-6">
-                                <img id="preview-image-before-upload" src="{{ asset('images/'.$user->profile_picture) }}" alt="preview image" style="max-height: 200px;">
+                                <img id="preview-image-before-upload" src="{{ asset('/images/'.$user->profile_picture) }}" alt="preview image" style="max-height: 200px;">
                                 <input type="file" disabled id="profile_picture" name="profile_picture" class="form-control @error('profile_picture') is-invalid @enderror" placeholder="Choose profile picture" autocomplete="profile_picture" >
                                 @error('profile_picture')
                                 <span class="invalid-feedback" role="alert">

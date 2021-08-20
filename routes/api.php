@@ -18,7 +18,7 @@ Route::post('/student/register', [StudentApiController::class, 'register']);
 Route::post('/student/login', [StudentApiController::class, 'login']);
 Route::group(['prefix' => 'student', 'middleware' => 'auth:api'], function () {
     Route::post('logout', [StudentApiController::class, 'logout']);
-    Route::get('show', [StudentApiController::class, 'getStudent']);
-    Route::put('update', [StudentApiController::class, 'updateStudent']);
+    Route::get('profile', [StudentApiController::class, 'profile']);
+    Route::put('update/{userId}', [StudentApiController::class, 'updateStudent']);
     Route::delete('delete', [StudentApiController::class, 'deleteStudent']);
 });

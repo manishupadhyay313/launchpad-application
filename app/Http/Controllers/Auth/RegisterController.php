@@ -9,7 +9,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Mail;
 class RegisterController extends Controller
 {
     /*
@@ -99,6 +99,7 @@ class RegisterController extends Controller
             'current_school' => 'required',
             'previous_school' => 'required',
             'address' => 'required',
+            'parent_details.*' => 'required|array',
         ]);
         //dd($request->parent_details[0]['name']);
         $user = new User();
@@ -114,7 +115,8 @@ class RegisterController extends Controller
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
             $extension = $request->file('profile_picture')->getClientOriginalExtension();
             $fileNameToStore = $filename . '_' . time() . '.' . $extension;
-            $request->file('profile_picture')->storeAs('public/image', $fileNameToStore);
+            $destinationPath = public_path('/images');
+            $request->file('profile_picture')->move($destinationPath, $fileNameToStore);
         }
         $user->profile_picture = $fileNameToStore;
         $user->experience = $request->experience;
@@ -125,14 +127,19 @@ class RegisterController extends Controller
             }
         }
         $user->parent_details = $parentDetails;
-        $user->assigned_teacher = $request->assigned_teacher;
         $user->status = 'inactive';
         if ($user->save()) {
             if (isset($request->expertise_in_subjects)) {
                 $user->expertiseInSubjects()->attach($request->expertise_in_subjects);
             }
         }
-        session()->flash('success', 'You are successfully register');
+        $data['name'] = $user->name;
+        $data['status'] = $user->status;
+        Mail::send('email/register',$data, function($message) use ($user){
+            $message->to('manishupadhyay.hestabit@gmail.com');
+            $message->subject('Register mail');
+        });
+        session()->flash('success', 'You are successfully register wait for approval by admin');
         return redirect()->to('/register');
     }
 }

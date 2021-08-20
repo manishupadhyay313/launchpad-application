@@ -120,18 +120,6 @@
                         </div>
                         <div id="studentFields" class="">
                             <div class="form-group row">
-                                <label for="assigned_teacher" class="col-md-4 col-form-label text-md-right">{{ __('Select Teacher') }}</label>
-                                <div class="col-md-6">
-                                    @php $teachers  = \App\Models\User::where('role_id',2)->get();  @endphp
-                                    <select class="form-control" id="assigned_teacher" name="assigned_teacher">
-                                        <option value="">Please select Teacher</option>
-                                        @foreach ($teachers as $teacher)
-                                        <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>  
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group row">
                                 <label for="parent_details" class="col-md-4 col-form-label text-md-right">{{ __('Parent Details') }}</label>
                                 <div class="col-md-6" id="addMoreStudentFields">
                                     <div class="form-row" id="field0">
@@ -145,6 +133,11 @@
                                             <button type="button" class="btn btn-primary" onclick="addMore()">Add More</button>
                                         </div>
                                     </div>
+                                    @error('parent_details')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
                                 </div>
                             </div>
                         </div>

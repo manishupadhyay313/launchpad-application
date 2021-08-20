@@ -90,7 +90,20 @@ class StudentApiController extends Controller
         ]);
     }
 
-    public function updateStudent(Request $request){
-        dd($request->all());
+    public function updateStudent(Request $request, $userId){
+        $user = User::find($userId);
+        if($user->id == Auth::user()->id){
+          dd($request->all());
+        }else{
+            return response()->json(['error'=>'You are not login']);
+        }
+    }
+    public function profile(Request $request){
+        $user = Auth::user();
+        if($user){
+          return response()->json(['profile'=>$user],200);
+        }else{
+            return response()->json(['error'=>'You are not login']);
+        }
     }
 }

@@ -23,6 +23,7 @@
                             </tr>
                         </thead> 
                         <tbody>
+                        @if(!empty($users) && $users->count())
                             @foreach ($users as $user)
                                 <tr>
                                     <td>{{ $user->name }}</td>
@@ -36,9 +37,15 @@
                                     @endif
                                 </tr>
                             @endforeach
-                           
+                        @else
+                            <tr>
+                                <td colspan="10">There are no student or teacher.</td>
+                            </tr>
+                        @endif
+                        
                         </tbody>
                     </table>
+                    {!! $users->links() !!}
                 </div>
             </div>
         </div>
