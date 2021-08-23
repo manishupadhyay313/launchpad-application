@@ -75,43 +75,10 @@ class DashboardController extends Controller
         $data['name'] = $user->name;
         $data['teacher'] = '';
         $data['status'] = $user->status;
-        Mail::send('email/approval',$data, function($message) use ($user){
-            $message->to('manishupadhyay.hestabit@gmail.com');
-            $message->subject('Yor are approval by admin');
-        });
+        Approval::dispatch($user);
         session()->flash('success', 'Teacher are successfully updated');
         return redirect()->to('/admin/dashboard');
     }
 
-    // public function students(){
 
-
-        // $teacherData = User::find($user->assigned_teacher);
-        // $data['teacher'] = '<br>Yo have a teacher'.$teacherData->name;
-        // $data['name'] = $user->name;
-        // $data['status'] = $user->status;
-        // Mail::send('email/approval',$data, function($message) use ($user){
-        //     $message->to('manishupadhyay.hestabit@gmail.com');
-        //     $message->subject('Yor are approval by admin with assign a teacher');
-        // });
-
-
-
-
-    //     $students = User::where('role_id',3)->orderby('id', 'desc')->paginate(5);
-        
-    //     return view('admin.students',['students'=>$students]);
-    // }
-    
-    // public function changeStatus(Request $request, $userId){
-    //     $user = User::findOrFail($userId);
-    //     $user->status = $request->status;
-    //     $user->save();
-    //     Approval::dispatch($user);
-    //     session()->flash('success', 'Student are successfully updated');
-    //     return redirect()->to('/admin/dashboard');
-    // }
-    // public function teacher(){
-        
-    // }
 }
