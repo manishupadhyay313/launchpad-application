@@ -8,29 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
-class ApiController extends Controller
+class AdminApiController extends Controller
 {
-    public function register(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email|Unique:users',
-            'password' => 'required',
-            'c_password' => 'required|same:password',
-        ]);
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 202);
-        }
-        $input = $request->all();
-        $input['password'] = bcrypt($input['password']);
-        $input['role_id'] = 1;
-        $input['status'] = 'active';
-        $user = User::create($input);
-        $responseArr = [];
-        $responseArr['msg'] = 'Successfully register';
-        $responseArr['admin'] = $user;
-        return response()->json($responseArr, 200);
-    }
 
     public function login(Request $request){
 
@@ -68,6 +47,15 @@ class ApiController extends Controller
         return response()->json([
             'message' => 'Successfully logged out'
         ]);
+    }
+
+    public function profile(Request $request){
+        $user = Auth::user();
+        if($user){
+          return response()->json(['profile'=>$user],200);
+        }else{
+            return response()->json(['error'=>'You are not login']);
+        }
     }
 
     

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 
-class StudentApiController extends Controller
+class TeacherApiController extends Controller
 {
     public function register(Request $request)
     {
@@ -22,8 +22,8 @@ class StudentApiController extends Controller
             'address' => 'required',
             'current_school' => 'required',
             'previous_school' => 'required',
-            'parent_details' => 'required',
-            'assigned_teacher' => 'required',
+            'experience' => 'required',
+            'expertise_in_subjects' => 'required',
             'profile_picture' => 'required|image|mimes:jpg,png,jpeg,gif,svg',
 
         ]);
@@ -42,9 +42,10 @@ class StudentApiController extends Controller
         $input['profile_picture'] = $fileNameToStore;
         $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
+        $user->expertiseInSubjects()->sync($request->expertise_in_subjects);
         $responseArr = [];
         $responseArr['msg'] = "You are successfully register and wait for admin approval";
-        $responseArr['student'] = $user;
+        $responseArr['teacher'] = $user;
         return response()->json($responseArr, 200);
     }
 
@@ -90,24 +91,6 @@ class StudentApiController extends Controller
         ]);
     }
 
-    public function updateStudent(Request $request, $userId){
-        $user = User::find($userId);
-        if($user->id == Auth::user()->id){
-          if($user->update($request->all())){
-            return response()->json([
-                'data' => $user,
-                'message' => 'Successfully updated profile'
-            ]);
-          }else{
-            return response()->json([
-                'message' => 'error occures profile update'
-            ]);
-          }
-          
-        }else{
-            return response()->json(['error'=>'You are not login']);
-        }
-    }
     public function profile(Request $request){
         $user = Auth::user();
         if($user){
@@ -116,21 +99,41 @@ class StudentApiController extends Controller
             return response()->json(['error'=>'You are not login']);
         }
     }
-    public function deleteStudent(Request $request, $userId){
+
+    public function update(Request $request, $userId){
+        $user = User::find($userId);
+        if($user->id == Auth::user()->id){
+          if($user->update($request->all())){
+            return response()->json([
+                'data' => $user,
+                'message' => 'Successfully updated profile'
+            ],200);
+          }else{
+            return response()->json([
+                'message' => 'error occures profile update'
+            ],401);
+          }
+          
+        }else{
+            return response()->json(['error'=>'You are not login'],401);
+        }
+    }
+   
+    public function delete(Request $request, $userId){
         $user = User::find($userId);
         if($user->id == Auth::user()->id){
             $request->user()->token()->revoke();
             if($user->delete()){
                 return response()->json([
                     'message' => 'Successfully deleted profile'
-                ]);
+                ],200);
               }else{
                 return response()->json([
                     'message' => 'error occures profile update'
-                ]);
+                ],401);
               }
         }else{
-            return response()->json(['error'=>'You are not login']);
+            return response()->json(['error'=>'You are not login'],401);
         }
     }
 }
