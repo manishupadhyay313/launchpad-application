@@ -30,6 +30,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'adminAuth']], funct
     Route::get('profile', [AdminDashboardController::class, 'editProfile'])->name('admin.profile');
     Route::post('profile', [AdminDashboardController::class, 'updateProfile'])->name('admin.update-profile');
     Route::get('dashboard', [AdminDashboardController::class, 'dashboard'])->name('admin.dashboard');
+
+    Route::get('students', [AdminDashboardController::class, 'students'])->name('admin.students');
+    Route::get('student/change-status/{userId}', [AdminDashboardController::class, 'changeStatus'])->name('admin.change-status');
+    Route::get('teachers', [AdminDashboardController::class, 'teachers'])->name('admin.teachers');
+
     Route::get('student/edit/{userId}', [AdminDashboardController::class, 'editStudent'])->name('admin.edit-student');
     Route::get('teacher/edit/{userId}', [AdminDashboardController::class, 'editTeacher'])->name('admin.edit-teacher');
     route::patch('student/update/{userId}', [AdminDashboardController::class, 'updateStaudent'])->name('admin.update-student');

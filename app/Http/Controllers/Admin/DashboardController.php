@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\Approval;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -84,5 +85,23 @@ class DashboardController extends Controller
         });
         session()->flash('success', 'Teacher are successfully updated');
         return redirect()->to('/admin/dashboard');
+    }
+
+    public function students(){
+        $students = User::where('role_id',3)->orderby('id', 'desc')->paginate(5);
+        
+        return view('admin.students',['students'=>$students]);
+    }
+    
+    public function changeStatus(Request $request, $userId){
+        $user = User::findOrFail($userId);
+        $user->status = $request->status;
+        $user->save();
+        Approval::dispatch($user);
+        session()->flash('success', 'Student are successfully updated');
+        return redirect()->to('/admin/dashboard');
+    }
+    public function teacher(){
+        
     }
 }
